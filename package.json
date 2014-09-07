@@ -1,0 +1,25 @@
+{
+  "name": "ti-selector",
+  "version": "0.0.1",
+  "description": "Simple selector for Titanium's native view elements.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/ti-selector.git"
+  },
+  "keywords": [
+    "titanium",
+    "selector",
+    "view"
+  ],
+  "author": "Kevin Chapelier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kchapelier/ti-selector/issues"
+  },
+  "homepage": "https://github.com/kchapelier/ti-selector",
+  "private" : true
+}

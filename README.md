@@ -83,3 +83,12 @@ var $$ = require('selector'),
 // Get the first parent View
 var parentView = $$.getParent(windowElement, 'view');
 ```
+
+## Roadmap
+
+ * Define the public API
+ * Write mocha tests for the query parser
+ * Implement the query parser
+ * Implement the iterator
+ * Implement the public API
+ * Make a build script to concatenate the files to avoid the CommonJS/Alloy issues on Android
