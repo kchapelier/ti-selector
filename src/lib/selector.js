@@ -4,20 +4,39 @@ var parser = require('./query-parser'),
 var selector = (function() {
     "use strict";
     
-    var getElements = function(root, query) {
+    var getMatchingFunction = function(query) {
+        var type = typeof query,
+            matchingFunction;
+        
+        if(type === 'function') {
+            matchingFunction = query;
+        } else if(type === 'string') {
+            var ruleSetList = parser(query);
+            
+            matchingFunction = function(element) {
+                throw new Error('To implement');
+            };
+        } else {
+            throw new Error('Unexpected type of query : ' + type);
+        }
+        
+        return matchingFunction;
+    };
+    
+    var getElements = function(root, query, limit) {
         throw new Error('To implement');
     };
     
     var getElement = function(root, query) {
-        throw new Error('To implement');
+        return getElements(root, query, 1);
     };
     
-    var getParents = function(root, query) {
+    var getParents = function(root, query, limit) {
         throw new Error('To implement');
     };
     
     var getParent = function(root, query) {
-        throw new Error('To implement');
+        return getParents(root, query, 1);
     };
     
     var selector = getElements;
