@@ -4,7 +4,7 @@
   "description": "Simple selector for Titanium's native view elements.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha test/"
   },
   "repository": {
     "type": "git",
