@@ -12,8 +12,8 @@ var parser = (function() {
 
         var readBasicToken = function(property, operand, allowedCharacters) {
             var token = { property : property, operand : operand, value : null },
-                    value = '',
-                    end = false;
+                value = '',
+                end = false;
 
             while(position < length && !end) {
                 var character = query[position];
@@ -41,7 +41,7 @@ var parser = (function() {
         };
 
         var readClassName = function() {
-            return readBasicToken('classname', '=', allowedCharactersForClassName);
+            return readBasicToken('class', '=', allowedCharactersForClassName);
         };
 
         while(position < length) {
@@ -56,7 +56,7 @@ var parser = (function() {
             } else if(allowedCharactersForTagName.indexOf(character) >= 0) {
                 tokens.push(readTagName());
             } else {
-                throw new Error('Unexpected character : "' + firstCharacter + '"');
+                throw new Error('Unexpected character : "' + character + '"');
             }
 
             position++;
@@ -67,7 +67,7 @@ var parser = (function() {
 
     var parser = function(query) {
         var ruleSetList = [],
-                individualQueries = query.split(',');
+            individualQueries = query.split(',');
 
         individualQueries.forEach(function(individualQuery) {
             individualQuery = individualQuery.trim();

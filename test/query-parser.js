@@ -22,7 +22,7 @@ describe('parser', function() {
         ruleSetList.length.should.equal(1);
         ruleSetList[0].length.should.equal(1);
         
-        ruleSetList[0][0].property.should.equal('classname');
+        ruleSetList[0][0].property.should.equal('class');
         ruleSetList[0][0].operand.should.equal('=');
         ruleSetList[0][0].value.should.equal('some-class');
     });
