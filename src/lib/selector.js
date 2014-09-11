@@ -14,7 +14,35 @@ var selector = (function() {
             var ruleSetList = parser(query);
             
             matchingFunction = function(element) {
-                throw new Error('To implement');
+                for(var i = 0; i < ruleSetList.length; i++) {
+                    var ruleSet = ruleSetList[i];
+                    
+                    var matching = true;
+                    
+                    for(var j = 0; j < ruleSet.length && matching; j++) {
+                        var property = ruleSet[j].property,
+                            value = ruleSet[j].value,
+                            operand = ruleSet[j].operand; //willfully ignored so far
+                        
+                        if(property === 'class') {
+                            var className = element.className;
+                            
+                            matching = (className && (new RegExp('(^| )' + value + '($| )')).test(className));
+                        } else if(property === 'tagname') {
+                            var tagname = element.apiName.substr(element.apiName.lastIndexOf('.') + 1).toLowerCase();
+                            
+                            matching = (tagname == value.toLowerCase());
+                        } else {
+                            matching = (element[property] == value);
+                        }
+                    }
+                    
+                    if(matching) {
+                        return true;
+                    }
+                }
+                
+                return false;
             };
         } else {
             throw new Error('Unexpected type of query : ' + type);
