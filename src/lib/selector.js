@@ -70,7 +70,25 @@ var selector = (function() {
     };
     
     var getParents = function(root, query, limit) {
-        throw new Error('To implement');
+        var queryFunction = getMatchingFunction(query),
+            elements = [root],
+            results = [];
+        
+        while(elements = iterator.parents(elements[0])) {
+            if(elements.length < 1) {
+                break;
+            }
+            
+            if(limit && results.length >= limit) {
+                break;
+            }
+            
+            if(queryFunction(elements[0])) {
+                results.push(elements[0]);
+            }
+        }
+        
+        return results;
     };
     
     var getParent = function(root, query) {
