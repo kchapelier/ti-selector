@@ -4,6 +4,20 @@ var parser = require('./query-parser'),
 var selector = (function() {
     "use strict";
     
+    var operands = {
+        'match-class' : function(actual, expected) {
+            return (actual && (new RegExp('(^| )' + expected + '($| )')).test(actual));
+        },
+        'match-tag' : function(actual, expected) {
+            actual = actual.substr(actual.lastIndexOf('.') + 1);
+            
+            return actual.toLowerCase() == expected.toLowerCase();
+        },
+        '=' : function(actual, expected) {
+            return actual === expected;
+        }
+    };
+    
     var getMatchingFunction = function(query) {
         var type = typeof query,
             matchingFunction;
@@ -25,16 +39,12 @@ var selector = (function() {
                             operand = ruleSet[j].operand; //willfully ignored so far
                         
                         if(property === 'class') {
-                            var className = element.className;
-                            
-                            matching = (className && (new RegExp('(^| )' + value + '($| )')).test(className));
+                            property = 'className';
                         } else if(property === 'tagname') {
-                            var tagname = element.apiName.substr(element.apiName.lastIndexOf('.') + 1).toLowerCase();
-                            
-                            matching = (tagname == value.toLowerCase());
-                        } else {
-                            matching = (element[property] == value);
+                            property = 'apiName';
                         }
+                        
+                        matching = operands[operand] && element[property] && operands[operand](element[property], value);
                     }
                     
                     if(matching) {

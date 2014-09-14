@@ -33,7 +33,7 @@ var parser = (function() {
         };
 
         var readTagName = function() {
-            return readBasicToken('tagname', '=', allowedCharactersForTagName);
+            return readBasicToken('tagname', 'match-tag', allowedCharactersForTagName);
         };
 
         var readId = function() {
@@ -41,7 +41,7 @@ var parser = (function() {
         };
 
         var readClassName = function() {
-            return readBasicToken('class', '=', allowedCharactersForClassName);
+            return readBasicToken('class', 'match-class', allowedCharactersForClassName);
         };
 
         while(position < length) {
