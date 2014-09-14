@@ -23,7 +23,7 @@ describe('parser', function() {
         ruleSetList[0].length.should.equal(1);
         
         ruleSetList[0][0].property.should.equal('class');
-        ruleSetList[0][0].operand.should.equal('=');
+        ruleSetList[0][0].operand.should.equal('match-class');
         ruleSetList[0][0].value.should.equal('some-class');
     });
     
@@ -34,7 +34,7 @@ describe('parser', function() {
         ruleSetList[0].length.should.equal(1);
         
         ruleSetList[0][0].property.should.equal('tagname');
-        ruleSetList[0][0].operand.should.equal('=');
+        ruleSetList[0][0].operand.should.equal('match-tag');
         ruleSetList[0][0].value.should.equal('some-tag');
     });
     
