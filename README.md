@@ -2,7 +2,13 @@
 
 Simple selector for Titanium's native view elements.
 
+**Warning : The library is not currently usable.**
+
 ## Intent
+
+Provide a way to easily retrieve specific elements from the Titanium views.
+
+The library will be limited to an intentionally limited subset of the css selector syntax.
 
 ## Projected API
 
@@ -11,7 +17,7 @@ Simple selector for Titanium's native view elements.
 Returns an array with all the elements inside the root element matching the query.
 Returns an empty array if no elements match the query.
 
-#### Exemples
+#### Examples
 
 ```js
 var $$ = require('selector'),
@@ -46,7 +52,7 @@ var panels = $$(windowElement, 'view#panel');
 Returns the first element found inside the root element matching the query.
 Returns null if no elements match the query.
 
-#### Exemples
+#### Examples
 
 ```js
 var $$ = require('selector'),
@@ -61,7 +67,7 @@ var panel = $$.getElement(windowElement, 'view#panel');
 Returns an array with all the parent elements of the root element matching the query.
 Returns an empty array if no elements match the query.
 
-#### Exemples
+#### Examples
 
 ```js
 var $$ = require('selector'),
@@ -76,6 +82,8 @@ var parentViews = $$.getParents(windowElement, 'view');
 Returns the first parent element of the root element matching query.
 Returns null if no elements match the query.
 
+#### Examples
+
 ```js
 var $$ = require('selector'),
     windowElement = $.window;
@@ -87,8 +95,10 @@ var parentView = $$.getParent(windowElement, 'view');
 ## Roadmap
 
  * Define the public API
- * Write mocha tests for the query parser
- * Implement the query parser
+ * ~~Write mocha tests for the query parser~~
+ * ~~Implement the query parser~~
+ * Make a build script to concatenate the files to avoid the CommonJS/Alloy issues on Android
  * Implement the iterator
  * Implement the public API
- * Make a build script to concatenate the files to avoid the CommonJS/Alloy issues on Android
+ * Hit 0.1
+ * Add support for *[attribute=value]* selectors
