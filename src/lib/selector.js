@@ -62,7 +62,30 @@ var selector = (function() {
     };
     
     var getElements = function(root, query, limit) {
-        throw new Error('To implement');
+        var queryFunction = getMatchingFunction(query),
+            results = [];
+            
+        var iterate = function(root) {
+            var elements = iterator.children(root);
+            
+            for(var i = 0; i < elements.length; i++) {
+                if(limit && results.length >= limit) {
+                    return;
+                }
+                
+                var element = elements[i];
+                
+                if(queryFunction(element)) {
+                    results.push(element);
+                }
+                
+                iterate(element);
+            }
+        };
+        
+        iterate(root);
+            
+        return results;
     };
     
     var getElement = function(root, query) {
