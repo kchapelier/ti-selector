@@ -4,7 +4,8 @@
   "description": "Simple selector for Titanium's native view elements.",
   "main": "src/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/"
+    "test": "./node_modules/.bin/mocha test/",
+    "build": "./node_modules/.bin/gulp build"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,11 @@
     "url": "https://github.com/kchapelier/ti-selector/issues"
   },
   "homepage": "https://github.com/kchapelier/ti-selector",
-  "private" : true
+  "private": true,
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "gulp": "^3.8.8",
+    "gulp-concat-util": "^0.4.0",
+    "mocha": "^1.21.4"
+  }
 }
