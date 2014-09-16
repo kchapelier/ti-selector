@@ -67,47 +67,29 @@ var selector = (function() {
         return matchingFunction;
     };
 
-    var getElements = function(root, query, limit) {
-        var queryFunction = getMatchingFunction(query),
-            results = [];
+    var createGetFunction = function(walkingFunction, limit) {
+        return function(root, query) {
+            var queryFunction = getMatchingFunction(query),
+                results = [];
 
-        iterator.walkChildren(root, function(element) {
-            if(queryFunction(element)) {
-                results.push(element);
-            }
+            walkingFunction(root, function(element) {
+                if(queryFunction(element)) {
+                    results.push(element);
+                }
 
-            if(limit && results.length >= limit) {
-                return false;
-            }
-        });
+                if(limit && results.length >= limit) {
+                    return false;
+                }
+            });
 
-        return results;
+            return results;
+        };
     };
 
-    var getElement = function(root, query) {
-        return getElements(root, query, 1);
-    };
-
-    var getParents = function(root, query, limit) {
-        var queryFunction = getMatchingFunction(query),
-            results = [];
-
-        iterator.walkParents(root, function(element) {
-            if(queryFunction(element)) {
-                results.push(element);
-            }
-
-            if(limit && results.length >= limit) {
-                return false;
-            }
-        });
-
-        return results;
-    };
-
-    var getParent = function(root, query) {
-        return getParents(root, query, 1);
-    };
+    var getElements = createGetFunction(iterator.walkChildren, null),
+        getElement = createGetFunction(iterator.walkChildren, 1),
+        getParents = createGetFunction(iterator.walkParents, null),
+        getParent = createGetFunction(iterator.walkParents, 1);
 
     var selector = getElements;
     selector.getElements = getElements;
