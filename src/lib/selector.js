@@ -82,7 +82,7 @@ var selector = (function() {
                 }
             });
 
-            return results;
+            return limit === 1 ? results[0] : results;
         };
     };
 

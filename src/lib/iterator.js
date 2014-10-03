@@ -6,9 +6,15 @@ var iterator = (function() {
 
         if(element.children) {
             children = element.children;
-        } else if(element.apiName === 'Ti.Api.TableViewSection') {
+        } else if(element.apiName === 'Ti.UI.TableView') {
+            if(element.sections) {
+                children = element.sections;
+            } else {
+                children = element.data;
+            }
+        } else if(element.apiName === 'Ti.UI.TableViewSection') {
             children = element.rows;
-        } else if(element.apiName === 'Ti.Api.TableViewRow') {
+        } else if(element.apiName === 'Ti.UI.TableViewRow') {
             children = element.data;
         }
 
