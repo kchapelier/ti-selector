@@ -2,15 +2,13 @@
 
 Simple selector for Titanium's native view elements.
 
-**Warning : The library is not currently usable.**
-
 ## Intent
 
 Provide a way to easily retrieve specific elements from the Titanium views.
 
 The library will be limited to an intentionally limited subset of the css selector syntax.
 
-## Projected API
+## Public API
 
 ### selector.getElements(rootElement, query)
 
@@ -92,13 +90,39 @@ var $$ = require('selector'),
 var parentView = $$.getParent(windowElement, 'view');
 ```
 
+## How to install
+
+ * Copy ```build/ti-selector.js``` in your application's ```lib``` folder.
+ * Require it as you would with any CommonJS modules
+
+```js
+var selector = require('ti-selector');
+```
+
+## Build system
+
+The build system is based on gulp and a few modules which are included as local dev dependencies.
+There's no need to install gulp globally, but installing the dependencies is necessary.
+
+```npm install```
+
+Once this is done, run the build script.
+
+```npm run build```
+
+## Changelog
+
+### 0.1.0 (2014.10.03) :
+
+ * First implementation
+
+[Full history](https://github.com/kchapelier/ti-selector/blob/master/CHANGELOG.md)
+
 ## Roadmap
 
- * Define the public API
- * ~~Write mocha tests for the query parser~~
- * ~~Implement the query parser~~
- * Make a build script to concatenate the files to avoid the CommonJS/Alloy issues on Android
- * Implement the iterator
- * Implement the public API
- * Hit 0.1
- * Add support for *[attribute=value]* selectors
+ * Add support for *[attribute=value]* selectors.
+ * Try to add proper support for listview, tableview and widget if possible.
+ * Write better doc.
+ * Check whether it can be used in vanilla Titanium (outside of Alloy).
+ * Check whether it can be made available in gittio.
+ * Declare the API stable and hit 1.0.0 once all the above is done.
