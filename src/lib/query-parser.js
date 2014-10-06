@@ -41,7 +41,7 @@ var parser = (function() {
         };
 
         var readClassName = function() {
-            return readBasicToken('class', 'match-class', allowedCharactersForClassName);
+            return readBasicToken('class', '~=', allowedCharactersForClassName);
         };
 
         while(position < length) {

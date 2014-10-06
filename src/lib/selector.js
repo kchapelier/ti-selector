@@ -1,28 +1,14 @@
 /* Submodules */
 
 var parser = require('./query-parser'),
-    iterator = require('./iterator');
+    iterator = require('./iterator'),
+    operands = require('./operands');
 
 /* Submodules end */
 
 
-
 var selector = (function() {
     "use strict";
-
-    var operands = {
-        'match-class' : function(actual, expected) {
-            return (actual && (new RegExp('(^| )' + expected + '($| )')).test(actual));
-        },
-        'match-tag' : function(actual, expected) {
-            actual = actual.substr(actual.lastIndexOf('.') + 1);
-
-            return actual.toLowerCase() === expected.toLowerCase();
-        },
-        '=' : function(actual, expected) {
-            return actual === expected;
-        }
-    };
 
     var getMatchingFunction = function(query) {
         var type = typeof query,
@@ -50,7 +36,7 @@ var selector = (function() {
                             property = 'apiName';
                         }
 
-                        matching = operands[operand] && element[property] && operands[operand](element[property], value);
+                        matching = operands(operand, element[property], value);
                     }
 
                     if(matching) {
