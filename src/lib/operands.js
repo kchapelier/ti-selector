@@ -5,25 +5,27 @@ var operands = (function() {
         'match-tag' : function(actual, expected) {
             actual = actual.substr(actual.lastIndexOf('.') + 1);
 
-            return actual.toLowerCase() === expected.toLowerCase();
+            return (actual.toLowerCase() === expected.toLowerCase());
         },
         '=' : function(actual, expected) {
-            return actual === expected;
+            return (actual == expected);
         },
         '~=' : function(actual, expected) {
-            return (actual && (new RegExp('(^| )' + expected + '($| )')).test(actual));
+            //TODO what if the expected value is not simply alphabetical but a value like .* ?
+            return ((new RegExp('(^| )' + expected + '($| )')).test(actual));
         },
         '|=' : function(actual, expected) {
             //TODO to implement
         },
         '^=' : function(actual, expected) {
-            return (actual && actual.indexOf && actual.indexOf(expected) === 0);
+            return (String(actual).indexOf(expected) === 0);
         },
         '$=' : function(actual, expected) {
-            return (actual && actual.lastIndexOf && actual.lastIndexOf(expected) === actual.length - 1 - expected.length);
+            //TODO optimize this
+            return (String(actual).lastIndexOf(expected) === String(actual).length - String(expected).length);
         },
         '*=' : function(actual, expected) {
-            return (actual && actual.indexOf && actual.indexOf(expected) > -1);
+            return (String(actual).indexOf(expected) > -1);
         }
     };
 
