@@ -1,6 +1,58 @@
 (function() {
     "use strict";
 
+    var operators = (function() {
+        //From http://stackoverflow.com/a/6969486
+        var escapeRegexpString = function(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        };
+
+        var list = {
+            'match-tag' : function(actual, expected) {
+                actual = actual.substr(actual.lastIndexOf('.') + 1);
+
+                return (actual.toLowerCase() === expected.toLowerCase());
+            },
+            '=' : function(actual, expected) {
+                return (actual === expected);
+            },
+            '~=' : function(actual, expected) {
+                return ((new RegExp('(^| )' + escapeRegexpString(expected) + '($| )')).test(actual));
+            },
+            '|=' : function(actual, expected) {
+                return (actual === expected) | (actual.indexOf(expected + '-') === 0);
+            },
+            '^=' : function(actual, expected) {
+                return (actual.indexOf(expected) === 0);
+            },
+            '$=' : function(actual, expected) {
+
+                return (actual.lastIndexOf(expected) === actual.length - expected.length);
+            },
+            '*=' : function(actual, expected) {
+                return (actual.indexOf(expected) > -1);
+            }
+        };
+
+        var operators = function(operator, actual, expected) {
+            var result = false,
+                typeActual = typeof actual;
+
+            if(
+                (typeActual === 'string' || typeActual === 'number') &&
+                list.hasOwnProperty(operator)
+            ) {
+                result = !!list[operator](String(actual), String(expected));
+            }
+
+            return result;
+        };
+
+        return operators;
+    }());
+
+
+
     var iterator = (function() {
         var getChildren = function(element) {
             var children = [];
@@ -66,10 +118,12 @@
 
             var allowedCharactersForId = 'azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890-_'.split(''),
                 allowedCharactersForClassName = allowedCharactersForId,
-                allowedCharactersForTagName = allowedCharactersForId;
+                allowedCharactersForTagName = allowedCharactersForId,
+                allowedCharactersForAttribute = allowedCharactersForId,
+                allowedCharactersForoperator = '^$*|='.split('');
 
-            var readBasicToken = function(property, operand, allowedCharacters) {
-                var token = { property : property, operand : operand, value : null },
+            var readBasicToken = function(property, operator, allowedCharacters) {
+                var token = { property : property, operator : operator, value : null },
                     value = '',
                     end = false;
 
@@ -99,13 +153,60 @@
             };
 
             var readClassName = function() {
-                return readBasicToken('class', 'match-class', allowedCharactersForClassName);
+                return readBasicToken('class', '~=', allowedCharactersForClassName);
+            };
+
+            var readAttributeSelector = function() {
+                var property = '',
+                    operator = '',
+                    value = '',
+                    step = 0, //0 : property, 1 : operator, 2 : value
+                    end = false;
+
+                while(position < length && !end) {
+                    var character = query[position];
+
+                    if(character === ']') {
+                        end = true;
+                    } else {
+                        if(step === 0) {
+                            if(allowedCharactersForAttribute.indexOf(character) >= 0) {
+                                property+= character;
+                            } else {
+                                step++;
+                            }
+                        }
+
+                        if(step === 1) {
+                            if(allowedCharactersForoperator.indexOf(character) >= 0) {
+                                operator+= character;
+                            } else {
+                                step++;
+                            }
+                        }
+
+                        if(step === 2) {
+                            value+= character;
+                        }
+                    }
+
+                    position++;
+                }
+
+                return {
+                    property : property,
+                    operator : operator,
+                    value : value
+                };
             };
 
             while(position < length) {
                 var character = query[position];
 
-                if(character === '.') {
+                if(character === '[') {
+                    position = position + 1;
+                    tokens.push(readAttributeSelector());
+                } else if(character === '.') {
                     position = position + 1;
                     tokens.push(readClassName());
                 } else if(character === '#') {
@@ -144,20 +245,6 @@
 
 
     var selector = (function() {
-        var operands = {
-            'match-class' : function(actual, expected) {
-                return (actual && (new RegExp('(^| )' + expected + '($| )')).test(actual));
-            },
-            'match-tag' : function(actual, expected) {
-                actual = actual.substr(actual.lastIndexOf('.') + 1);
-
-                return actual.toLowerCase() === expected.toLowerCase();
-            },
-            '=' : function(actual, expected) {
-                return actual === expected;
-            }
-        };
-
         var getMatchingFunction = function(query) {
             var type = typeof query,
                 matchingFunction;
@@ -176,7 +263,7 @@
                         for(var j = 0; j < ruleSet.length && matching; j++) {
                             var property = ruleSet[j].property,
                                 value = ruleSet[j].value,
-                                operand = ruleSet[j].operand; //willfully ignored so far
+                                operator = ruleSet[j].operator; //willfully ignored so far
 
                             if(property === 'class') {
                                 property = 'className';
@@ -184,7 +271,7 @@
                                 property = 'apiName';
                             }
 
-                            matching = operands[operand] && element[property] && operands[operand](element[property], value);
+                            matching = operators(operator, element[property], value);
                         }
 
                         if(matching) {
