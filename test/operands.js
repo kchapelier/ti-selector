@@ -60,6 +60,11 @@ describe('operand ~=', function() {
         operands('~=', 0, 0).should.be.true;
         operands('~=', '', '').should.be.true;
     });
+
+    it('should work with special character (which would normally clash with the regexp)', function() {
+        operands('~=', '\\(//)+', '\\(//)+').should.be.true;
+        operands('~=', '.', '.*').should.be.false;
+    });
 });
 
 describe('operand |=', function() {

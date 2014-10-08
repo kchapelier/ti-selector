@@ -1,6 +1,11 @@
 var operands = (function() {
     "use strict";
 
+    //From http://stackoverflow.com/a/6969486
+    var escapeRegexpString = function(str) {
+        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    };
+
     var list = {
         'match-tag' : function(actual, expected) {
             actual = actual.substr(actual.lastIndexOf('.') + 1);
@@ -11,8 +16,7 @@ var operands = (function() {
             return (actual === expected);
         },
         '~=' : function(actual, expected) {
-            //TODO what if the expected value is not simply alphabetical but a value like .* ?
-            return ((new RegExp('(^| )' + expected + '($| )')).test(actual));
+            return ((new RegExp('(^| )' + escapeRegexpString(expected) + '($| )')).test(actual));
         },
         '|=' : function(actual, expected) {
             return (actual === expected) | (actual.indexOf(expected + '-') === 0);
