@@ -15,7 +15,7 @@ var operands = (function() {
             return ((new RegExp('(^| )' + expected + '($| )')).test(actual));
         },
         '|=' : function(actual, expected) {
-            //TODO to implement
+            return (actual == expected) | (String(actual).indexOf(String(expected) + '-') === 0);
         },
         '^=' : function(actual, expected) {
             return (String(actual).indexOf(expected) === 0);

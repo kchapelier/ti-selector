@@ -53,7 +53,23 @@ describe('operand ~=', function() {
 });
 
 describe('operand |=', function() {
+    it('should be true if the values are equals', function() {
+        operands('|=', 'machin', 'machin').should.be.true;
+        operands('|=', 1, 1).should.be.true;
+        operands('|=', '1', 1).should.be.true;
+    });
 
+    it('should be true if the actual value starts with the expected value followed by a dash', function() {
+        operands('|=', 'machin-chose', 'machin').should.be.true;
+        operands('|=', '1-2', 1).should.be.true;
+    });
+
+    it('should be false if the values are not equal and the actual value doesnt starts with the expected value followed by a dash', function() {
+        operands('|=', 'chose', 'machin').should.be.false;
+        operands('|=', 'chose-machin', 'machin').should.be.false;
+        operands('|=', 'chose-machin-something', 'machin').should.be.false;
+        operands('|=', 2, 1).should.be.false;
+    });
 });
 
 describe('operand ^=', function() {
