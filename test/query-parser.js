@@ -38,13 +38,35 @@ describe('parser', function() {
         ruleSetList[0][0].value.should.equal('some-tag');
     });
 
+    it('should accept attribute selector', function() {
+        var ruleSetList = parser('[property^=test]');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(1);
+
+        ruleSetList[0][0].property.should.equal('property');
+        ruleSetList[0][0].operand.should.equal('^=');
+        ruleSetList[0][0].value.should.equal('test');
+    });
+
+    it('should accept attribute selector with quoted value', function() {
+        var ruleSetList = parser('[property="[some value!]"]'); //TODO currently failing
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(1);
+
+        ruleSetList[0][0].property.should.equal('property');
+        ruleSetList[0][0].operand.should.equal('=');
+        ruleSetList[0][0].value.should.equal('[some value!]');
+    });
+
     it('should accept any combination of selector', function() {
         var ruleSetList = parser('some-tag.some-class#some-id');
 
         ruleSetList.length.should.equal(1);
         ruleSetList[0].length.should.equal(3);
 
-        var ruleSetList = parser('.some-class.some-other-class');
+        ruleSetList = parser('.some-class.some-other-class');
 
         ruleSetList.length.should.equal(1);
         ruleSetList[0].length.should.equal(2);
@@ -61,7 +83,7 @@ describe('parser', function() {
 
         ruleSetList.length.should.equal(0);
 
-        var ruleSetList = parser(',,,some-tag,,,');
+        ruleSetList = parser(',,,some-tag,,,');
 
         ruleSetList.length.should.equal(1);
     });

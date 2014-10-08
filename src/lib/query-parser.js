@@ -8,7 +8,9 @@ var parser = (function() {
 
         var allowedCharactersForId = 'azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890-_'.split(''),
             allowedCharactersForClassName = allowedCharactersForId,
-            allowedCharactersForTagName = allowedCharactersForId;
+            allowedCharactersForTagName = allowedCharactersForId,
+            allowedCharactersForAttribute = allowedCharactersForId,
+            allowedCharactersForOperand = '^$*|='.split('');
 
         var readBasicToken = function(property, operand, allowedCharacters) {
             var token = { property : property, operand : operand, value : null },
@@ -44,10 +46,57 @@ var parser = (function() {
             return readBasicToken('class', '~=', allowedCharactersForClassName);
         };
 
+        var readAttributeSelector = function() {
+            var property = '',
+                operand = '',
+                value = '',
+                step = 0, //0 : property, 1 : operand, 2 : value
+                end = false;
+
+            while(position < length && !end) {
+                var character = query[position];
+
+                if(character === ']') {
+                    end = true;
+                } else {
+                    if(step === 0) {
+                        if(allowedCharactersForAttribute.indexOf(character) >= 0) {
+                            property+= character;
+                        } else {
+                            step++;
+                        }
+                    }
+
+                    if(step === 1) {
+                        if(allowedCharactersForOperand.indexOf(character) >= 0) {
+                            operand+= character;
+                        } else {
+                            step++;
+                        }
+                    }
+
+                    if(step === 2) {
+                        value+= character;
+                    }
+                }
+
+                position++;
+            }
+
+            return {
+                property : property,
+                operand : operand,
+                value : value
+            };
+        };
+
         while(position < length) {
             var character = query[position];
 
-            if(character === '.') {
+            if(character === '[') {
+                position = position + 1;
+                tokens.push(readAttributeSelector());
+            } else if(character === '.') {
                 position = position + 1;
                 tokens.push(readClassName());
             } else if(character === '#') {
