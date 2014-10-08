@@ -4,8 +4,6 @@ require('chai').should();
 
 var operands = require('../src/lib/operands');
 
-//TODO do tests with 0 and other 'empty' values
-
 describe('operand match-tag', function() {
     it('should be true if the last element of the dot-separated actual value is the expected value', function() {
         operands('match-tag', 'Ti.UI.View', 'View').should.be.true;
@@ -35,6 +33,12 @@ describe('operand =', function() {
         operands('=', 1, 2).should.be.false;
         operands('=', '1 thing', 1).should.be.false;
     });
+
+    it('should work with 0 and empty values', function() {
+        operands('=', '0', '0').should.be.true;
+        operands('=', 0, 0).should.be.true;
+        operands('=', '', '').should.be.true;
+    });
 });
 
 describe('operand ~=', function() {
@@ -49,6 +53,12 @@ describe('operand ~=', function() {
     it('should be true if the expected value is not contained as a word', function() {
         operands('~=', 'machin 1', 'chose').should.be.false;
         operands('~=', 'une-chose', 'chose').should.be.false;
+    });
+
+    it('should work with 0 and empty values', function() {
+        operands('~=', '0', '0').should.be.true;
+        operands('~=', 0, 0).should.be.true;
+        operands('~=', '', '').should.be.true;
     });
 });
 
@@ -70,6 +80,12 @@ describe('operand |=', function() {
         operands('|=', 'chose-machin-something', 'machin').should.be.false;
         operands('|=', 2, 1).should.be.false;
     });
+
+    it('should work with 0 and empty values', function() {
+        operands('|=', '0', '0').should.be.true;
+        operands('|=', 0, 0).should.be.true;
+        operands('|=', '', '').should.be.true;
+    });
 });
 
 describe('operand ^=', function() {
@@ -84,6 +100,12 @@ describe('operand ^=', function() {
         operands('^=', 'une chose', 'chose').should.be.false;
         operands('^=', 1, 2).should.be.false;
     });
+
+    it('should work with 0 and empty values', function() {
+        operands('^=', '0', '0').should.be.true;
+        operands('^=', 0, 0).should.be.true;
+        operands('^=', '', '').should.be.true;
+    });
 });
 
 describe('operand $=', function() {
@@ -97,6 +119,12 @@ describe('operand $=', function() {
         operands('$=', 'machin 1', 'chose').should.be.false;
         operands('$=', 'chose une', 'chose').should.be.false;
         operands('$=', 1, 2).should.be.false;
+    });
+
+    it('should work with 0 and empty values', function() {
+        operands('$=', '0', '0').should.be.true;
+        operands('$=', 0, 0).should.be.true;
+        operands('$=', '', '').should.be.true;
     });
 });
 
@@ -113,5 +141,11 @@ describe('operand *=', function() {
         operands('*=', 'chose', 'machin').should.be.false;
         operands('*=', 'machi', 'machin').should.be.false;
         operands('*=', 1, 2).should.be.false;
+    });
+
+    it('should work with 0 and empty values', function() {
+        operands('*=', '0', '0').should.be.true;
+        operands('*=', 0, 0).should.be.true;
+        operands('*=', '', '').should.be.true;
     });
 });
