@@ -1,4 +1,4 @@
-var operands = (function() {
+var operators = (function() {
     "use strict";
 
     //From http://stackoverflow.com/a/6969486
@@ -33,21 +33,21 @@ var operands = (function() {
         }
     };
 
-    var operands = function(operand, actual, expected) {
+    var operators = function(operator, actual, expected) {
         var result = false,
             typeActual = typeof actual;
 
         if(
             (typeActual === 'string' || typeActual === 'number') &&
-            list.hasOwnProperty(operand)
+            list.hasOwnProperty(operator)
         ) {
-            result = !!list[operand](String(actual), String(expected));
+            result = !!list[operator](String(actual), String(expected));
         }
 
         return result;
     };
 
-    return operands;
+    return operators;
 }());
 
-module.exports = operands;
+module.exports = operators;

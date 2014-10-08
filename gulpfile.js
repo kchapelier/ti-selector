@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 gulp.task('build', function() {
     gulp
         .src([
-            './src/lib/operands.js', './src/lib/iterator.js', './src/lib/query-parser.js', './src/lib/selector.js',
+            './src/lib/operators.js', './src/lib/iterator.js', './src/lib/query-parser.js', './src/lib/selector.js',
             './src/index.js'
         ])
         .pipe(concat('ti-selector.js', {

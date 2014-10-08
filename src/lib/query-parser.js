@@ -10,10 +10,10 @@ var parser = (function() {
             allowedCharactersForClassName = allowedCharactersForId,
             allowedCharactersForTagName = allowedCharactersForId,
             allowedCharactersForAttribute = allowedCharactersForId,
-            allowedCharactersForOperand = '^$*|='.split('');
+            allowedCharactersForoperator = '^$*|='.split('');
 
-        var readBasicToken = function(property, operand, allowedCharacters) {
-            var token = { property : property, operand : operand, value : null },
+        var readBasicToken = function(property, operator, allowedCharacters) {
+            var token = { property : property, operator : operator, value : null },
                 value = '',
                 end = false;
 
@@ -48,9 +48,9 @@ var parser = (function() {
 
         var readAttributeSelector = function() {
             var property = '',
-                operand = '',
+                operator = '',
                 value = '',
-                step = 0, //0 : property, 1 : operand, 2 : value
+                step = 0, //0 : property, 1 : operator, 2 : value
                 end = false;
 
             while(position < length && !end) {
@@ -68,8 +68,8 @@ var parser = (function() {
                     }
 
                     if(step === 1) {
-                        if(allowedCharactersForOperand.indexOf(character) >= 0) {
-                            operand+= character;
+                        if(allowedCharactersForoperator.indexOf(character) >= 0) {
+                            operator+= character;
                         } else {
                             step++;
                         }
@@ -85,7 +85,7 @@ var parser = (function() {
 
             return {
                 property : property,
-                operand : operand,
+                operator : operator,
                 value : value
             };
         };

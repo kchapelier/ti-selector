@@ -2,7 +2,7 @@
 
 var parser = require('./query-parser'),
     iterator = require('./iterator'),
-    operands = require('./operands');
+    operators = require('./operators');
 
 /* Submodules end */
 
@@ -28,7 +28,7 @@ var selector = (function() {
                     for(var j = 0; j < ruleSet.length && matching; j++) {
                         var property = ruleSet[j].property,
                             value = ruleSet[j].value,
-                            operand = ruleSet[j].operand; //willfully ignored so far
+                            operator = ruleSet[j].operator; //willfully ignored so far
 
                         if(property === 'class') {
                             property = 'className';
@@ -36,7 +36,7 @@ var selector = (function() {
                             property = 'apiName';
                         }
 
-                        matching = operands(operand, element[property], value);
+                        matching = operators(operator, element[property], value);
                     }
 
                     if(matching) {
