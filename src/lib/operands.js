@@ -8,32 +8,36 @@ var operands = (function() {
             return (actual.toLowerCase() === expected.toLowerCase());
         },
         '=' : function(actual, expected) {
-            return (actual == expected);
+            return (actual === expected);
         },
         '~=' : function(actual, expected) {
             //TODO what if the expected value is not simply alphabetical but a value like .* ?
             return ((new RegExp('(^| )' + expected + '($| )')).test(actual));
         },
         '|=' : function(actual, expected) {
-            return (actual == expected) | (String(actual).indexOf(String(expected) + '-') === 0);
+            return (actual === expected) | (actual.indexOf(expected + '-') === 0);
         },
         '^=' : function(actual, expected) {
-            return (String(actual).indexOf(expected) === 0);
+            return (actual.indexOf(expected) === 0);
         },
         '$=' : function(actual, expected) {
-            //TODO optimize this
-            return (String(actual).lastIndexOf(expected) === String(actual).length - String(expected).length);
+
+            return (actual.lastIndexOf(expected) === actual.length - expected.length);
         },
         '*=' : function(actual, expected) {
-            return (String(actual).indexOf(expected) > -1);
+            return (actual.indexOf(expected) > -1);
         }
     };
 
     var operands = function(operand, actual, expected) {
-        var result = false;
+        var result = false,
+            typeActual = typeof actual;
 
-        if(actual && list.hasOwnProperty(operand)) {
-            result = !!list[operand](actual, expected);
+        if(
+            (typeActual === 'string' || typeActual === 'number') &&
+            list.hasOwnProperty(operand)
+        ) {
+            result = !!list[operand](String(actual), String(expected));
         }
 
         return result;
