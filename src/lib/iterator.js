@@ -31,9 +31,20 @@ var iterator = (function() {
         return parents;
     };
 
-    var createWalkFunction = function(iterativeFunc) {
+    var getSiblings = function(element) {
+        var siblings = [],
+            parent = getParents(element);
+
+        if(parent.length) {
+            siblings = getChildren(parent[0]);
+        }
+
+        return siblings;
+    };
+
+    var createWalkFunction = function(baseFunction, iterative) {
         var self = function(root, func) {
-            var elements = iterativeFunc(root);
+            var elements = baseFunction(root);
 
             for(var i = 0; i < elements.length; i++) {
                 var element = elements[i];
@@ -42,7 +53,9 @@ var iterator = (function() {
                     return;
                 }
 
-                self(element, func);
+                if(iterative) {
+                    self(element, func);
+                }
             }
         };
 
@@ -50,8 +63,9 @@ var iterator = (function() {
     };
 
     return {
-        walkParents : createWalkFunction(getParents),
-        walkChildren : createWalkFunction(getChildren)
+        walkParents  : createWalkFunction(getParents, true),
+        walkChildren : createWalkFunction(getChildren, true),
+        walkSiblings : createWalkFunction(getSiblings, false)
     };
 }());
 

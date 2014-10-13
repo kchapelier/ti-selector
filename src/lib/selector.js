@@ -75,13 +75,17 @@ var selector = (function() {
     var getElements = createGetFunction(iterator.walkChildren, null),
         getElement = createGetFunction(iterator.walkChildren, 1),
         getParents = createGetFunction(iterator.walkParents, null),
-        getParent = createGetFunction(iterator.walkParents, 1);
+        getParent = createGetFunction(iterator.walkParents, 1),
+        geSiblings = createGetFunction(iterator.walkSiblings, null),
+        geSibling = createGetFunction(iterator.walkSiblings, 1);
 
     var selector = getElements;
     selector.getElements = getElements;
     selector.getElement = getElement;
     selector.getParents = getParents;
     selector.getParent = getParent;
+    selector.geSiblings = geSiblings;
+    selector.geSibling = geSibling;
 
     return selector;
 }());
