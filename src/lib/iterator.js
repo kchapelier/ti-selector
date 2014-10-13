@@ -39,7 +39,9 @@ var iterator = (function() {
             siblings = getChildren(parent[0]);
         }
 
-        return siblings;
+        return siblings.filter(function(siblingElement) {
+            return siblingElement !== element;
+        });
     };
 
     var createWalkFunction = function(baseFunction, iterative) {
