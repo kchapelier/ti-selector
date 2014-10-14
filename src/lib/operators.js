@@ -10,6 +10,9 @@ var operators = (function() {
         '=' : function(actual, expected) {
             return (actual === expected);
         },
+        '!=' : function(actual, expected) {
+            return (actual !== expected);
+        },
         '~=' : function(actual, expected) {
             return (' ' + actual +  ' ').indexOf(' ' + expected + ' ') > -1;
         },

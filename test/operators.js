@@ -41,6 +41,26 @@ describe('operator =', function() {
     });
 });
 
+describe('operator !=', function() {
+    it('should be true if the values are not equals', function() {
+        operators('!=', 'machin 1', 'machin 2').should.be.true;
+        operators('!=', 1, 2).should.be.true;
+        operators('!=', '1 thing', 1).should.be.true;
+    });
+
+    it('should be false if the values are equals', function() {
+        operators('!=', 'machin 1', 'machin 1').should.be.false;
+        operators('!=', 1, 1).should.be.false;
+        operators('!=', '1', 1).should.be.false;
+    });
+
+    it('should work with 0 and empty values', function() {
+        operators('!=', '0', '0').should.be.false;
+        operators('!=', 0, 0).should.be.false;
+        operators('!=', '', '').should.be.false;
+    });
+});
+
 describe('operator ~=', function() {
     it('should be true if the expected value is contained as a word', function() {
         operators('~=', 'machin 1', 'machin').should.be.true;
