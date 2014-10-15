@@ -28,7 +28,7 @@ var selector = (function() {
                     for(var j = 0; j < ruleSet.length && matching; j++) {
                         var property = ruleSet[j].property,
                             value = ruleSet[j].value,
-                            operator = ruleSet[j].operator; //willfully ignored so far
+                            operator = ruleSet[j].operator;
 
                         if(property === 'class') {
                             property = 'className';
@@ -76,16 +76,16 @@ var selector = (function() {
         getElement = createGetFunction(iterator.walkChildren, 1),
         getParents = createGetFunction(iterator.walkParents, null),
         getParent = createGetFunction(iterator.walkParents, 1),
-        geSiblings = createGetFunction(iterator.walkSiblings, null),
-        geSibling = createGetFunction(iterator.walkSiblings, 1);
+        getSiblings = createGetFunction(iterator.walkSiblings, null),
+        getSibling = createGetFunction(iterator.walkSiblings, 1);
 
     var selector = getElements;
     selector.getElements = getElements;
     selector.getElement = getElement;
     selector.getParents = getParents;
     selector.getParent = getParent;
-    selector.geSiblings = geSiblings;
-    selector.geSibling = geSibling;
+    selector.getSiblings = getSiblings;
+    selector.getSibling = getSibling;
 
     return selector;
 }());
