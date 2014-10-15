@@ -1,12 +1,18 @@
+/**
+ * ti-selector
+ * 
+ * Simple selector for Titanium's native view elements.
+ * 
+ * Author: Kevin Chapelier
+ * Version: 0.3.0
+ * License: MIT
+ * Repository: https://github.com/kchapelier/ti-selector.git
+ */
+
 (function() {
     "use strict";
 
     var operators = (function() {
-        //From http://stackoverflow.com/a/6969486
-        var escapeRegexpString = function(str) {
-            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-        };
-
         var list = {
             'match-tag' : function(actual, expected) {
                 actual = actual.substr(actual.lastIndexOf('.') + 1);
@@ -16,8 +22,11 @@
             '=' : function(actual, expected) {
                 return (actual === expected);
             },
+            '!=' : function(actual, expected) {
+                return (actual !== expected);
+            },
             '~=' : function(actual, expected) {
-                return ((new RegExp('(^| )' + escapeRegexpString(expected) + '($| )')).test(actual));
+                return (' ' + actual +  ' ').indexOf(' ' + expected + ' ') > -1;
             },
             '|=' : function(actual, expected) {
                 return (actual === expected) | (actual.indexOf(expected + '-') === 0);
@@ -26,7 +35,6 @@
                 return (actual.indexOf(expected) === 0);
             },
             '$=' : function(actual, expected) {
-
                 return (actual.lastIndexOf(expected) === actual.length - expected.length);
             },
             '*=' : function(actual, expected) {
@@ -84,9 +92,22 @@
             return parents;
         };
 
-        var createWalkFunction = function(iterativeFunc) {
+        var getSiblings = function(element) {
+            var siblings = [],
+                parent = getParents(element);
+
+            if(parent.length) {
+                siblings = getChildren(parent[0]);
+            }
+
+            return siblings.filter(function(siblingElement) {
+                return siblingElement !== element;
+            });
+        };
+
+        var createWalkFunction = function(baseFunction, iterative) {
             var self = function(root, func) {
-                var elements = iterativeFunc(root);
+                var elements = baseFunction(root);
 
                 for(var i = 0; i < elements.length; i++) {
                     var element = elements[i];
@@ -95,7 +116,9 @@
                         return;
                     }
 
-                    self(element, func);
+                    if(iterative) {
+                        self(element, func);
+                    }
                 }
             };
 
@@ -103,8 +126,9 @@
         };
 
         return {
-            walkParents : createWalkFunction(getParents),
-            walkChildren : createWalkFunction(getChildren)
+            walkParents  : createWalkFunction(getParents, true),
+            walkChildren : createWalkFunction(getChildren, true),
+            walkSiblings : createWalkFunction(getSiblings, false)
         };
     }());
 
@@ -120,7 +144,7 @@
                 allowedCharactersForClassName = allowedCharactersForId,
                 allowedCharactersForTagName = allowedCharactersForId,
                 allowedCharactersForAttribute = allowedCharactersForId,
-                allowedCharactersForoperator = '^$*|='.split('');
+                allowedCharactersForoperator = '^$*|!='.split('');
 
             var readBasicToken = function(property, operator, allowedCharacters) {
                 var token = { property : property, operator : operator, value : null },
@@ -156,6 +180,42 @@
                 return readBasicToken('class', '~=', allowedCharactersForClassName);
             };
 
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/string
+
+            var readQuotedString = function() {
+                var quote = query[position],
+                    result = '',
+                    escaped = false,
+                    escapedToken = '';
+
+                while(position < length) {
+                    position++;
+
+                    var character = query[position];
+
+                    if(escaped) {
+                        if(false) {
+                            //TODO treat hexadecimal token here
+                            //http://www.w3.org/TR/2013/WD-css-syntax-3-20131105/#consume-an-escaped-code-point0
+                        } else {
+                            result+= character;
+                            escaped = false;
+                        }
+                    } else {
+                        if(character === quote) {
+                            break;
+                        } else if(character === '\\') {
+                            escaped = true;
+                        } else {
+                            result+= character;
+                        }
+                    }
+
+                }
+
+                return result;
+            };
+
             var readAttributeSelector = function() {
                 var property = '',
                     operator = '',
@@ -168,6 +228,7 @@
 
                     if(character === ']') {
                         end = true;
+                        position--;
                     } else {
                         if(step === 0) {
                             if(allowedCharactersForAttribute.indexOf(character) >= 0) {
@@ -186,7 +247,11 @@
                         }
 
                         if(step === 2) {
-                            value+= character;
+                            if(character === '\'' || character === '"') {
+                                value = readQuotedString(character);
+                            } else {
+                                value+= character;
+                            }
                         }
                     }
 
@@ -263,7 +328,7 @@
                         for(var j = 0; j < ruleSet.length && matching; j++) {
                             var property = ruleSet[j].property,
                                 value = ruleSet[j].value,
-                                operator = ruleSet[j].operator; //willfully ignored so far
+                                operator = ruleSet[j].operator;
 
                             if(property === 'class') {
                                 property = 'className';
@@ -310,13 +375,17 @@
         var getElements = createGetFunction(iterator.walkChildren, null),
             getElement = createGetFunction(iterator.walkChildren, 1),
             getParents = createGetFunction(iterator.walkParents, null),
-            getParent = createGetFunction(iterator.walkParents, 1);
+            getParent = createGetFunction(iterator.walkParents, 1),
+            getSiblings = createGetFunction(iterator.walkSiblings, null),
+            getSibling = createGetFunction(iterator.walkSiblings, 1);
 
         var selector = getElements;
         selector.getElements = getElements;
         selector.getElement = getElement;
         selector.getParents = getParents;
         selector.getParent = getParent;
+        selector.getSiblings = getSiblings;
+        selector.getSibling = getSibling;
 
         return selector;
     }());

@@ -2,6 +2,23 @@ var gulp = require('gulp'),
     concat = require('gulp-concat-util'),
     fs = require('fs');
 
+var createHeaderComment = function() {
+    var info = require('./package.json');
+
+    var comment = '/**\n';
+    comment+= ' * ' + info.name + '\n';
+    comment+= ' * \n';
+    comment+= ' * ' + info.description + '\n';
+    comment+= ' * \n';
+    comment+= ' * Author: ' + info.author + '\n';
+    comment+= ' * Version: ' + info.version + '\n';
+    comment+= ' * License: ' + info.license + '\n';
+    comment+= ' * Repository: ' + info.repository.url + '\n';
+    comment+= ' */\n\n';
+
+    return comment;
+};
+
 gulp.task('build', function() {
     gulp
         .src([
@@ -23,7 +40,7 @@ gulp.task('build', function() {
                     .replace(/\n[ /t]+(\n|$)/g, '\n\n');
             }
         }))
-        .pipe(concat.header(fs.readFileSync('./build-templates/header')))
+        .pipe(concat.header(createHeaderComment() + fs.readFileSync('./build-templates/header')))
         .pipe(concat.footer(fs.readFileSync('./build-templates/footer')))
         .pipe(gulp.dest('./build'));
 });

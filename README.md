@@ -90,6 +90,36 @@ var $$ = require('selector'),
 var parentView = $$.getParent(windowElement, 'view');
 ```
 
+### selector.getSiblings(rootElement, query)
+
+Returns an array with all the siblings of the root element matching the query.
+Returns an empty array if no elements match the query.
+
+#### Examples
+
+```js
+var $$ = require('selector'),
+    eventList = $.eventList;
+
+// Get all the sibling View
+var siblingViews = $$.getSiblings(eventList, 'view');
+```
+
+### selector.getSibling(rootElement, query)
+
+Returns the first sibling of the root element matching the query.
+Returns null if no elements match the query.
+
+#### Examples
+
+```js
+var $$ = require('selector'),
+    eventList = $.eventList;
+
+// Get the first sibling View
+var siblingView = $$.getSibling(eventList, 'view');
+```
+
 ## How to install
 
  * Copy ```build/ti-selector.js``` in your application's ```lib``` folder.
@@ -112,6 +142,12 @@ Once this is done, run the build script.
 
 ## Changelog
 
+### 0.3.0 (2014.10.15) :
+
+ * Implement getSiblings() and getSibling()
+ * Add support for quoted values in attribute selectors
+ * Add support for != operator
+
 ### 0.2.0 (2014.10.08) :
 
  * Add basic support for attributes selectors
@@ -125,7 +161,8 @@ Once this is done, run the build script.
 
 ## Roadmap
 
- * Add support for *[attribute=value]* selectors.
+ * Support escaped hexadecimal tokens in css string ?
+ * Support [property] type of selectors (without operator or values)
  * Try to add proper support for listview, tableview and widget if possible.
  * Write better doc.
  * Check whether it can be used in vanilla Titanium (outside of Alloy).
