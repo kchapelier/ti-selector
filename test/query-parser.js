@@ -50,7 +50,7 @@ describe('parser', function() {
     });
 
     it('should accept attribute selector with quoted value', function() {
-        var ruleSetList = parser('[property="[some value!]"]'); //TODO currently failing
+        var ruleSetList = parser('[property="[some value!]"]');
 
         ruleSetList.length.should.equal(1);
         ruleSetList[0].length.should.equal(1);
@@ -58,6 +58,20 @@ describe('parser', function() {
         ruleSetList[0][0].property.should.equal('property');
         ruleSetList[0][0].operator.should.equal('=');
         ruleSetList[0][0].value.should.equal('[some value!]');
+    });
+
+    it('should accept attribute selector with quoted value and escaped characters', function() {
+        var ruleSetList = parser('[property="\\""]');
+        ruleSetList[0][0].value.should.equal('"');
+
+        var ruleSetList = parser("[property='\\'']");
+        ruleSetList[0][0].value.should.equal("'");
+
+        var ruleSetList = parser('[property="\\\\"]');
+        ruleSetList[0][0].value.should.equal('\\');
+
+        var ruleSetList = parser('[property="r\\st"]');
+        ruleSetList[0][0].value.should.equal('rst');
     });
 
     it('should accept any combination of selector', function() {
@@ -70,6 +84,11 @@ describe('parser', function() {
 
         ruleSetList.length.should.equal(1);
         ruleSetList[0].length.should.equal(2);
+
+        ruleSetList = parser('view[property=some value][property2="some other value"]');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(3);
     });
 
     it('should accept multiple queries separated by a comma', function() {

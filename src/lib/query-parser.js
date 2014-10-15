@@ -10,7 +10,7 @@ var parser = (function() {
             allowedCharactersForClassName = allowedCharactersForId,
             allowedCharactersForTagName = allowedCharactersForId,
             allowedCharactersForAttribute = allowedCharactersForId,
-            allowedCharactersForoperator = '^$*|='.split('');
+            allowedCharactersForoperator = '^$*|!='.split('');
 
         var readBasicToken = function(property, operator, allowedCharacters) {
             var token = { property : property, operator : operator, value : null },
@@ -46,6 +46,42 @@ var parser = (function() {
             return readBasicToken('class', '~=', allowedCharactersForClassName);
         };
 
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/string
+
+        var readQuotedString = function() {
+            var quote = query[position],
+                result = '',
+                escaped = false,
+                escapedToken = '';
+
+            while(position < length) {
+                position++;
+
+                var character = query[position];
+
+                if(escaped) {
+                    if(false) {
+                        //TODO treat hexadecimal token here
+                        //http://www.w3.org/TR/2013/WD-css-syntax-3-20131105/#consume-an-escaped-code-point0
+                    } else {
+                        result+= character;
+                        escaped = false;
+                    }
+                } else {
+                    if(character === quote) {
+                        break;
+                    } else if(character === '\\') {
+                        escaped = true;
+                    } else {
+                        result+= character;
+                    }
+                }
+
+            }
+
+            return result;
+        };
+
         var readAttributeSelector = function() {
             var property = '',
                 operator = '',
@@ -58,6 +94,7 @@ var parser = (function() {
 
                 if(character === ']') {
                     end = true;
+                    position--;
                 } else {
                     if(step === 0) {
                         if(allowedCharactersForAttribute.indexOf(character) >= 0) {
@@ -76,7 +113,11 @@ var parser = (function() {
                     }
 
                     if(step === 2) {
-                        value+= character;
+                        if(character === '\'' || character === '"') {
+                            value = readQuotedString(character);
+                        } else {
+                            value+= character;
+                        }
                     }
                 }
 
