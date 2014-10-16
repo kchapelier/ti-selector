@@ -49,6 +49,16 @@ describe('parser', function() {
         ruleSetList[0][0].value.should.equal('test');
     });
 
+    it('should accept "has" attribute selector', function() {
+        var ruleSetList = parser('[property]');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(1);
+
+        ruleSetList[0][0].property.should.equal('property');
+        ruleSetList[0][0].operator.should.equal('has');
+    });
+
     it('should accept attribute selector with quoted value', function() {
         var ruleSetList = parser('[property="[some value!]"]');
 

@@ -47,8 +47,6 @@ var parser = (function() {
             return readBasicToken('class', '~=', allowedCharactersForClassName);
         };
 
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/string
-
         var readQuotedString = function() {
             var quote = query[position],
                 result = '',
@@ -133,7 +131,7 @@ var parser = (function() {
 
             return {
                 property : property,
-                operator : operator,
+                operator : operator ? operator : 'has',
                 value : value
             };
         };
