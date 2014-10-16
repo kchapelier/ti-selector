@@ -10,7 +10,8 @@ var parser = (function() {
             allowedCharactersForClassName = allowedCharactersForId,
             allowedCharactersForTagName = allowedCharactersForId,
             allowedCharactersForAttribute = allowedCharactersForId,
-            allowedCharactersForoperator = '^$*|!='.split('');
+            allowedCharactersForoperator = '^$*|!='.split(''),
+            hexadecimalCharacters = 'ABCDEFabcdef0123456789'.split('');
 
         var readBasicToken = function(property, operator, allowedCharacters) {
             var token = { property : property, operator : operator, value : null },
@@ -52,7 +53,7 @@ var parser = (function() {
             var quote = query[position],
                 result = '',
                 escaped = false,
-                escapedToken = '';
+                escapedToken;
 
             while(position < length) {
                 position++;
@@ -60,11 +61,17 @@ var parser = (function() {
                 var character = query[position];
 
                 if(escaped) {
-                    if(false) {
-                        //TODO treat hexadecimal token here
-                        //http://www.w3.org/TR/2013/WD-css-syntax-3-20131105/#consume-an-escaped-code-point0
+                    if(hexadecimalCharacters.indexOf(character) > -1 && escapedToken.length < 6) {
+                        escapedToken+= character;
                     } else {
-                        result+= character;
+                        if(escapedToken) {
+                            var characterCode = parseInt(escapedToken.toString(), 16);
+                            result+= String.fromCharCode(characterCode);
+                            position--;
+                        } else {
+                            result+= character;
+                        }
+
                         escaped = false;
                     }
                 } else {
@@ -72,11 +79,11 @@ var parser = (function() {
                         break;
                     } else if(character === '\\') {
                         escaped = true;
+                        escapedToken = '';
                     } else {
                         result+= character;
                     }
                 }
-
             }
 
             return result;

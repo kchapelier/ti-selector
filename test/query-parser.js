@@ -74,6 +74,17 @@ describe('parser', function() {
         ruleSetList[0][0].value.should.equal('rst');
     });
 
+    it('should accept attribute selector with quoted value and escaped hexadecimal token', function() {
+        var ruleSetList = parser('[property="\\A"]');
+        ruleSetList[0][0].value.should.equal('\n');
+
+        var ruleSetList = parser('[property="\\00000aa"]');
+        ruleSetList[0][0].value.should.equal('\na');
+
+        var ruleSetList = parser('[property="\\3042"]');
+        ruleSetList[0][0].value.should.equal('あ');
+    });
+
     it('should accept any combination of selector', function() {
         var ruleSetList = parser('some-tag.some-class#some-id');
 
