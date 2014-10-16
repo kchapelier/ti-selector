@@ -34,7 +34,9 @@ var operators = (function() {
         var result = false,
             typeActual = typeof actual;
 
-        if(
+        if(operator === 'has') {
+            result = (typeof actual !== 'undefined');
+        } else if(
             (typeActual === 'string' || typeActual === 'number') &&
             list.hasOwnProperty(operator)
         ) {

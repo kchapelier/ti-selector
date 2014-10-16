@@ -21,6 +21,18 @@ describe('operator match-tag', function() {
     });
 });
 
+describe('operator has', function() {
+    it('should be true if the value is not undefined', function() {
+        operators('has', 'value', '').should.be.true;
+        operators('has', '', '').should.be.true;
+        operators('has', null, '').should.be.true;
+    });
+
+    it('should be false if the value is undefined', function() {
+        operators('has', undefined, '').should.be.false;
+    });
+});
+
 describe('operator =', function() {
     it('should be true if the values are equals', function() {
         operators('=', 'machin 1', 'machin 1').should.be.true;
