@@ -1,5 +1,10 @@
 # ti-selector - Changelog
 
+### 0.4.0 (2014.10.20) :
+
+ * Support escaped hexadecimal tokens in css string
+ * Support "has" selector ([property] without operator or values)
+
 ### 0.3.0 (2014.10.15) :
 
  * Implement getSiblings() and getSibling()

@@ -142,6 +142,11 @@ Once this is done, run the build script.
 
 ## Changelog
 
+### 0.4.0 (2014.10.20) :
+
+ * Support escaped hexadecimal tokens in css string
+ * Support "has" selector ([property] without operator or values)
+
 ### 0.3.0 (2014.10.15) :
 
  * Implement getSiblings() and getSibling()
@@ -161,8 +166,6 @@ Once this is done, run the build script.
 
 ## Roadmap
 
- * Support escaped hexadecimal tokens in css string ?
- * Support [property] type of selectors (without operator or values)
  * Try to add proper support for listview, tableview and widget if possible.
  * Write better doc.
  * Check whether it can be used in vanilla Titanium (outside of Alloy).

@@ -1,6 +1,6 @@
 {
   "name": "ti-selector",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Simple selector for Titanium's native view elements.",
   "main": "src/index.js",
   "scripts": {

@@ -4,7 +4,7 @@
  * Simple selector for Titanium's native view elements.
  * 
  * Author: Kevin Chapelier
- * Version: 0.3.0
+ * Version: 0.4.0
  * License: MIT
  * Repository: https://github.com/kchapelier/ti-selector.git
  */
@@ -46,7 +46,9 @@
             var result = false,
                 typeActual = typeof actual;
 
-            if(
+            if(operator === 'has') {
+                result = (typeof actual !== 'undefined');
+            } else if(
                 (typeActual === 'string' || typeActual === 'number') &&
                 list.hasOwnProperty(operator)
             ) {
@@ -144,7 +146,8 @@
                 allowedCharactersForClassName = allowedCharactersForId,
                 allowedCharactersForTagName = allowedCharactersForId,
                 allowedCharactersForAttribute = allowedCharactersForId,
-                allowedCharactersForoperator = '^$*|!='.split('');
+                allowedCharactersForoperator = '^$*|!='.split(''),
+                hexadecimalCharacters = 'ABCDEFabcdef0123456789'.split('');
 
             var readBasicToken = function(property, operator, allowedCharacters) {
                 var token = { property : property, operator : operator, value : null },
@@ -180,13 +183,11 @@
                 return readBasicToken('class', '~=', allowedCharactersForClassName);
             };
 
-            // https://developer.mozilla.org/en-US/docs/Web/CSS/string
-
             var readQuotedString = function() {
                 var quote = query[position],
                     result = '',
                     escaped = false,
-                    escapedToken = '';
+                    escapedToken;
 
                 while(position < length) {
                     position++;
@@ -194,11 +195,17 @@
                     var character = query[position];
 
                     if(escaped) {
-                        if(false) {
-                            //TODO treat hexadecimal token here
-                            //http://www.w3.org/TR/2013/WD-css-syntax-3-20131105/#consume-an-escaped-code-point0
+                        if(hexadecimalCharacters.indexOf(character) > -1 && escapedToken.length < 6) {
+                            escapedToken+= character;
                         } else {
-                            result+= character;
+                            if(escapedToken) {
+                                var characterCode = parseInt(escapedToken.toString(), 16);
+                                result+= String.fromCharCode(characterCode);
+                                position--;
+                            } else {
+                                result+= character;
+                            }
+
                             escaped = false;
                         }
                     } else {
@@ -206,11 +213,11 @@
                             break;
                         } else if(character === '\\') {
                             escaped = true;
+                            escapedToken = '';
                         } else {
                             result+= character;
                         }
                     }
-
                 }
 
                 return result;
@@ -260,7 +267,7 @@
 
                 return {
                     property : property,
-                    operator : operator,
+                    operator : operator ? operator : 'has',
                     value : value
                 };
             };

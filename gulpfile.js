@@ -3,9 +3,10 @@ var gulp = require('gulp'),
     fs = require('fs');
 
 var createHeaderComment = function() {
-    var info = require('./package.json');
+    var info = require('./package.json'),
+        comment;
 
-    var comment = '/**\n';
+    comment = '/**\n';
     comment+= ' * ' + info.name + '\n';
     comment+= ' * \n';
     comment+= ' * ' + info.description + '\n';
