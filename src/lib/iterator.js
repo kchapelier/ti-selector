@@ -46,10 +46,11 @@ var iterator = (function () {
 
     var createWalkFunction = function (baseFunction, iterative) {
         var self = function (root, func) {
-            var elements = baseFunction(root);
+            var elements = baseFunction(root),
+                element, i;
 
-            for (var i = 0; i < elements.length; i++) {
-                var element = elements[i];
+            for (i = 0; i < elements.length; i++) {
+                element = elements[i];
 
                 if (func(element) === false) {
                     return;

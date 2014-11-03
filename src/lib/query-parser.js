@@ -55,19 +55,21 @@ var parser = (function () {
             var quote = query[position],
                 result = '',
                 escaped = false,
-                escapedToken;
+                escapedToken,
+                character,
+                characterCode;
 
             while (position < length) {
                 position++;
 
-                var character = query[position];
+                character = query[position];
 
                 if (escaped) {
                     if (hexadecimalCharacters.indexOf(character) > -1 && escapedToken.length < 6) {
                         escapedToken += character;
                     } else {
                         if (escapedToken) {
-                            var characterCode = parseInt(escapedToken.toString(), 16);
+                            characterCode = parseInt(escapedToken.toString(), 16);
                             result += String.fromCharCode(characterCode);
                             position--;
                         } else {
@@ -99,35 +101,35 @@ var parser = (function () {
                 end = false,
                 character;
 
-            while (position < length && !end) {
+            while (position < length) {
                 character = query[position];
 
                 if (character === ']') {
                     end = true;
-                    position--;
-                } else {
-                    if (step === 0) {
-                        if (allowedCharactersForAttribute.indexOf(character) >= 0) {
-                            property += character;
-                        } else {
-                            step++;
-                        }
-                    }
+                    break;
+                }
 
-                    if (step === 1) {
-                        if (allowedCharactersForoperator.indexOf(character) >= 0) {
-                            operator += character;
-                        } else {
-                            step++;
-                        }
+                if (step === 0) {
+                    if (allowedCharactersForAttribute.indexOf(character) >= 0) {
+                        property += character;
+                    } else {
+                        step++;
                     }
+                }
 
-                    if (step === 2) {
-                        if (character === '\'' || character === '"') {
-                            value = readQuotedString(character);
-                        } else {
-                            value += character;
-                        }
+                if (step === 1) {
+                    if (allowedCharactersForoperator.indexOf(character) >= 0) {
+                        operator += character;
+                    } else {
+                        step++;
+                    }
+                }
+
+                if (step === 2) {
+                    if (character === '\'' || character === '"') {
+                        value = readQuotedString(character);
+                    } else {
+                        value += character;
                     }
                 }
 

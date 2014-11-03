@@ -11,20 +11,25 @@ var selector = (function () {
 
     var getMatchingFunction = function (query) {
         var type = typeof query,
-            matchingFunction;
+            matchingFunction,
+            ruleSetList;
 
         if (type === 'function') {
             matchingFunction = query;
         } else if (type === 'string') {
-            var ruleSetList = parser(query);
+            ruleSetList = parser(query);
 
             matchingFunction = function (element) {
-                for (var i = 0; i < ruleSetList.length; i++) {
-                    var ruleSet = ruleSetList[i];
+                var ruleSet,
+                    matching,
+                    i, j;
 
-                    var matching = true;
+                for (i = 0; i < ruleSetList.length; i++) {
+                    ruleSet = ruleSetList[i];
 
-                    for (var j = 0; j < ruleSet.length && matching; j++) {
+                    matching = true;
+
+                    for (j = 0; j < ruleSet.length && matching; j++) {
                         var property = ruleSet[j].property,
                             value = ruleSet[j].value,
                             operator = ruleSet[j].operator;
