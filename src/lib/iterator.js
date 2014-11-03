@@ -4,18 +4,14 @@ var iterator = (function () {
     var getChildren = function (element) {
         var children = [];
 
-        if (element.children) {
+        if (element.children && element.children.length) {
             children = element.children;
         } else if (element.apiName === 'Ti.UI.TableView') {
-            if (element.sections) {
+            if (element.sections && element.sections.length) {
                 children = element.sections;
-            } else {
-                children = element.data;
             }
         } else if (element.apiName === 'Ti.UI.TableViewSection') {
             children = element.rows;
-        } else if (element.apiName === 'Ti.UI.TableViewRow') {
-            children = element.data;
         }
 
         return children;
