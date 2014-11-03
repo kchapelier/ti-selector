@@ -96,10 +96,11 @@ var parser = (function () {
                 operator = '',
                 value = '',
                 step = 0, //0 : property, 1 : operator, 2 : value
-                end = false;
+                end = false,
+                character;
 
             while (position < length && !end) {
-                var character = query[position];
+                character = query[position];
 
                 if (character === ']') {
                     end = true;

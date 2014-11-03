@@ -2,7 +2,11 @@ var gulp = require('gulp'),
     concat = require('gulp-concat-util'),
     fs = require('fs'),
     jscs = require('gulp-jscs'),
-    mocha = require('gulp-mocha');
+    jshint = require('gulp-jshint'),
+    stylish = require('jshint-stylish'),
+    mocha = require('gulp-mocha'),
+    sequence = require('run-sequence'),
+    plato = require('gulp-plato');
 
 var files = [
     './src/lib/operators.js', './src/lib/iterator.js', './src/lib/query-parser.js', './src/lib/selector.js',
@@ -27,10 +31,51 @@ var createHeaderComment = function() {
     return comment;
 };
 
+gulp.task('report', function() {
+    var jshintOptions = JSON.parse(fs.readFileSync('./.jshintrc'));
+
+    return gulp
+        .src(files)
+        .pipe(plato('report', {
+            jshint: {
+                options: jshintOptions
+            },
+            complexity: {
+                trycatch: true
+            }
+        }));
+});
+
+gulp.task('verify', function(callback) {
+    sequence(
+        'lint',
+        'codestyle',
+        'test',
+        function(err) {
+            if(!err) {
+                callback.apply(null, arguments);
+            }
+        }
+    );
+});
+
+gulp.task('lint', function() {
+    return gulp
+        .src(files)
+        .pipe(jshint('.jshintrc'))
+        .pipe(jshint.reporter(stylish));
+});
+
 gulp.task('codestyle', function() {
     return gulp
         .src(files)
         .pipe(jscs());
+});
+
+gulp.task('test', function() {
+    return gulp
+        .src([ './test/*.js' ])
+        .pipe(mocha({ reporter: 'spec' }));
 });
 
 gulp.task('build', function() {

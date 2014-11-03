@@ -4,7 +4,8 @@
   "description": "Simple selector for Titanium's native view elements.",
   "main": "src/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/",
+    "test": "./node_modules/.bin/gulp verify",
+    "report": "./node_modules/.bin/gulp report",
     "build": "./node_modules/.bin/gulp build"
   },
   "repository": {
@@ -30,6 +31,8 @@
     "gulp-jscs": "^1.2.1",
     "gulp-jshint": "^1.9.0",
     "gulp-mocha": "^1.1.1",
+    "gulp-plato": "^1.0.1",
+    "jshint-stylish": "^1.0.0",
     "mocha": "1.21.x",
     "run-sequence": "^1.0.1"
   }
