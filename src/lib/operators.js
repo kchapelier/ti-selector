@@ -1,42 +1,42 @@
-var operators = (function() {
+var operators = (function () {
     "use strict";
 
     var list = {
-        'match-tag' : function(actual, expected) {
+        'match-tag': function (actual, expected) {
             actual = actual.substr(actual.lastIndexOf('.') + 1);
 
             return (actual.toLowerCase() === expected.toLowerCase());
         },
-        '=' : function(actual, expected) {
+        '=': function (actual, expected) {
             return (actual === expected);
         },
-        '!=' : function(actual, expected) {
+        '!=': function (actual, expected) {
             return (actual !== expected);
         },
-        '~=' : function(actual, expected) {
-            return (' ' + actual +  ' ').indexOf(' ' + expected + ' ') > -1;
+        '~=': function (actual, expected) {
+            return (' ' + actual + ' ').indexOf(' ' + expected + ' ') > -1;
         },
-        '|=' : function(actual, expected) {
+        '|=': function (actual, expected) {
             return (actual === expected) | (actual.indexOf(expected + '-') === 0);
         },
-        '^=' : function(actual, expected) {
+        '^=': function (actual, expected) {
             return (actual.indexOf(expected) === 0);
         },
-        '$=' : function(actual, expected) {
+        '$=': function (actual, expected) {
             return (actual.lastIndexOf(expected) === actual.length - expected.length);
         },
-        '*=' : function(actual, expected) {
+        '*=': function (actual, expected) {
             return (actual.indexOf(expected) > -1);
         }
     };
 
-    var operators = function(operator, actual, expected) {
+    var operators = function (operator, actual, expected) {
         var result = false,
             typeActual = typeof actual;
 
-        if(operator === 'has') {
+        if (operator === 'has') {
             result = (typeof actual !== 'undefined');
-        } else if(
+        } else if (
             (typeActual === 'string' || typeActual === 'number') &&
             list.hasOwnProperty(operator)
         ) {

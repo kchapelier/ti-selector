@@ -1,6 +1,13 @@
 var gulp = require('gulp'),
     concat = require('gulp-concat-util'),
-    fs = require('fs');
+    fs = require('fs'),
+    jscs = require('gulp-jscs'),
+    mocha = require('gulp-mocha');
+
+var files = [
+    './src/lib/operators.js', './src/lib/iterator.js', './src/lib/query-parser.js', './src/lib/selector.js',
+    './src/index.js'
+];
 
 var createHeaderComment = function() {
     var info = require('./package.json'),
@@ -20,12 +27,15 @@ var createHeaderComment = function() {
     return comment;
 };
 
+gulp.task('codestyle', function() {
+    return gulp
+        .src(files)
+        .pipe(jscs());
+});
+
 gulp.task('build', function() {
     gulp
-        .src([
-            './src/lib/operators.js', './src/lib/iterator.js', './src/lib/query-parser.js', './src/lib/selector.js',
-            './src/index.js'
-        ])
+        .src(files)
         .pipe(concat('ti-selector.js', {
             process : function(src) {
                 return src

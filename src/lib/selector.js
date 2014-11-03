@@ -6,40 +6,39 @@ var parser = require('./query-parser'),
 
 /* Submodules end */
 
-
-var selector = (function() {
+var selector = (function () {
     "use strict";
 
-    var getMatchingFunction = function(query) {
+    var getMatchingFunction = function (query) {
         var type = typeof query,
             matchingFunction;
 
-        if(type === 'function') {
+        if (type === 'function') {
             matchingFunction = query;
-        } else if(type === 'string') {
+        } else if (type === 'string') {
             var ruleSetList = parser(query);
 
-            matchingFunction = function(element) {
-                for(var i = 0; i < ruleSetList.length; i++) {
+            matchingFunction = function (element) {
+                for (var i = 0; i < ruleSetList.length; i++) {
                     var ruleSet = ruleSetList[i];
 
                     var matching = true;
 
-                    for(var j = 0; j < ruleSet.length && matching; j++) {
+                    for (var j = 0; j < ruleSet.length && matching; j++) {
                         var property = ruleSet[j].property,
                             value = ruleSet[j].value,
                             operator = ruleSet[j].operator;
 
-                        if(property === 'class') {
+                        if (property === 'class') {
                             property = 'className';
-                        } else if(property === 'tagname') {
+                        } else if (property === 'tagname') {
                             property = 'apiName';
                         }
 
                         matching = operators(operator, element[property], value);
                     }
 
-                    if(matching) {
+                    if (matching) {
                         return true;
                     }
                 }
@@ -53,17 +52,17 @@ var selector = (function() {
         return matchingFunction;
     };
 
-    var createGetFunction = function(walkingFunction, limit) {
-        return function(root, query) {
+    var createGetFunction = function (walkingFunction, limit) {
+        return function (root, query) {
             var queryFunction = getMatchingFunction(query),
                 results = [];
 
-            walkingFunction(root, function(element) {
-                if(queryFunction(element)) {
+            walkingFunction(root, function (element) {
+                if (queryFunction(element)) {
                     results.push(element);
                 }
 
-                if(limit && results.length >= limit) {
+                if (limit && results.length >= limit) {
                     return false;
                 }
             });
