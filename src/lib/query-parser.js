@@ -13,42 +13,39 @@ var parser = (function () {
             allowedCharactersForoperator = '^$*|!='.split(''),
             hexadecimalCharacters = 'ABCDEFabcdef0123456789'.split('');
 
-        var readBasicToken = function (property, operator, allowedCharacters) {
-            var token = {
-                    property: property,
-                    operator: operator,
-                    value: null
-                },
-                value = '',
-                end = false;
+        var readBasicSelector = function (property, operator, allowedCharacters) {
+            var value = '',
+                character;
 
-            while (position < length && !end) {
-                var character = query[position];
+            while (position < length) {
+                character = query[position];
 
                 if (allowedCharacters.indexOf(character) >= 0) {
                     value += character;
                     position++;
                 } else {
-                    end = true;
                     position--;
+                    break;
                 }
             }
 
-            token.value = value;
-
-            return token;
+            return {
+                property: property,
+                operator: operator,
+                value: value
+            };
         };
 
         var readTagName = function () {
-            return readBasicToken('tagname', 'match-tag', allowedCharactersForTagName);
+            return readBasicSelector('tagname', 'match-tag', allowedCharactersForTagName);
         };
 
         var readId = function () {
-            return readBasicToken('id', '=', allowedCharactersForId);
+            return readBasicSelector('id', '=', allowedCharactersForId);
         };
 
         var readClassName = function () {
-            return readBasicToken('class', '~=', allowedCharactersForClassName);
+            return readBasicSelector('class', '~=', allowedCharactersForClassName);
         };
 
         var readQuotedString = function () {
@@ -98,14 +95,12 @@ var parser = (function () {
                 operator = '',
                 value = '',
                 step = 0, //0 : property, 1 : operator, 2 : value
-                end = false,
                 character;
 
             while (position < length) {
                 character = query[position];
 
                 if (character === ']') {
-                    end = true;
                     break;
                 }
 
