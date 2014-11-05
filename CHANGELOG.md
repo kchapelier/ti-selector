@@ -1,5 +1,11 @@
 # ti-selector - Changelog
 
+### 1.0.0 (2014.11.05) :
+
+ * Enforce code style with jscs
+ * Support for tableview and widgets
+ * Declare the public API stable
+
 ### 0.4.0 (2014.10.20) :
 
  * Support escaped hexadecimal tokens in css string
