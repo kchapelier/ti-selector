@@ -28,8 +28,7 @@ Once this is done, run the build script.
 
 ```npm run build```
 
-You don't need to use the build system if you are not taking part in the development of the library.
-You can simply use the build provided in the repository.
+You don't need to use the build system if you are not taking part in the development of the library or modifying it in any way.
 
 ## Public API
 
@@ -40,7 +39,7 @@ You can simply use the build provided in the repository.
  * selector.getSiblings(element, query)
  * selector.getSibling(element, query)
 
-[API documentation](https://github.com/kchapelier/ti-selector/blob/master/API.md)
+[Full API documentation](https://github.com/kchapelier/ti-selector/blob/master/API.md)
 
 ## Changelog
 
@@ -54,5 +53,4 @@ You can simply use the build provided in the repository.
 
 ## Roadmap
 
- * Check whether it can be made available in gittio.
- * Declare the API stable and hit 1.0.0 once all the above is done.
+ * Implements structural pseudo-classes for 1.1.0
