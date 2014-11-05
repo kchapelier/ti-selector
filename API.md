@@ -120,13 +120,13 @@ If the query is a string, it will be interpreted as a [CSS selector](http://www.
 
 The library has its own CSS selector parser
 
-[X] Type selectors
-[X] Id selectors
-[X] Class selector
-[X] Attribute selectors (with the addition of the non-standard !=)
-[ ] Universal selector (*)
-[ ] Pseudo classes
-[ ] Combinators (*not planned* as it would negatively impact performances)
+- [X] Type selectors
+- [X] Id selectors
+- [X] Class selector
+- [X] Attribute selectors (with the addition of the non-standard !=)
+- [ ] Universal selector
+- [ ] Pseudo classes
+- [ ] Combinators (*not planned* as it would negatively impact performances)
 
 #### Summary
 
