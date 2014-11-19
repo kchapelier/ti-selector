@@ -152,4 +152,12 @@ describe('parser', function() {
     it('should throw an error when trying to combine universal selector with type selector', function() {
         (function() { parser('*view'); }).should.throw(/Unexpected character/);
     });
+
+    it('should accept simple pseudo elements', function() {
+        var ruleSetList = parser(':first-child');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(1);
+        ruleSetList[0][0].pseudoElement.should.equal('first-child');
+    });
 });

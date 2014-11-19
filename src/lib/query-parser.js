@@ -10,10 +10,11 @@ var parser = (function () {
             allowedCharactersForClassName = allowedCharactersForId,
             allowedCharactersForTagName = allowedCharactersForId,
             allowedCharactersForAttribute = allowedCharactersForId,
+            allowedCharactersForPseudoElement = allowedCharactersForId,
             allowedCharactersForoperator = '^$*|!='.split(''),
             hexadecimalCharacters = 'ABCDEFabcdef0123456789'.split('');
 
-        var readBasicSelector = function (property, operator, allowedCharacters) {
+        var readString = function (allowedCharacters) {
             var value = '',
                 character;
 
@@ -29,10 +30,14 @@ var parser = (function () {
                 }
             }
 
+            return value;
+        };
+
+        var readBasicSelector = function (property, operator, allowedCharacters) {
             return {
                 property: property,
                 operator: operator,
-                value: value
+                value: readString(allowedCharacters)
             };
         };
 
@@ -138,6 +143,14 @@ var parser = (function () {
             };
         };
 
+        var readPseudoElement = function () {
+            var pseudoElement = readString(allowedCharactersForPseudoElement);
+
+            return {
+                pseudoElement: pseudoElement
+            };
+        };
+
         while (position < length) {
             var character = query[position];
 
@@ -150,6 +163,9 @@ var parser = (function () {
             } else if (character === '#') {
                 position = position + 1;
                 tokens.push(readId());
+            } else if (character === ':') {
+                position = position + 1;
+                tokens.push(readPseudoElement());
             } else if (!tokens.length && allowedCharactersForTagName.indexOf(character) >= 0) {
                 tokens.push(readTagName());
             } else if (!tokens.length && character === '*') {
