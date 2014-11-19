@@ -156,7 +156,7 @@ var parser = (function () {
                 tokens.push({
                     property: 'tagname',
                     operator: '*',
-                    value: null
+                    value: ''
                 });
             } else {
                 throw new Error('Unexpected character : "' + character + '"');

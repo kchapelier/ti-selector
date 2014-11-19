@@ -33,6 +33,15 @@ describe('operator has', function() {
     });
 });
 
+describe('operator *', function() {
+    it('should always be true', function() {
+        operators('*', 'value', '').should.be.true;
+        operators('*', '', '').should.be.true;
+        operators('*', null, '').should.be.true;
+        operators('*', undefined, '').should.be.true;
+    });
+});
+
 describe('operator =', function() {
     it('should be true if the values are equals', function() {
         operators('=', 'machin 1', 'machin 1').should.be.true;
