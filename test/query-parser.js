@@ -88,10 +88,10 @@ describe('parser', function() {
         var ruleSetList = parser('[property="\\A"]');
         ruleSetList[0][0].value.should.equal('\n');
 
-        var ruleSetList = parser('[property="\\00000aa"]');
+        ruleSetList = parser('[property="\\00000aa"]');
         ruleSetList[0][0].value.should.equal('\na');
 
-        var ruleSetList = parser('[property="\\3042"]');
+        ruleSetList = parser('[property="\\3042"]');
         ruleSetList[0][0].value.should.equal('あ');
     });
 
@@ -132,5 +132,24 @@ describe('parser', function() {
         (function() { parser('.some-class .some-other-class'); }).should.throw(/Unexpected character/);
         (function() { parser('.some-class>.some-other-class'); }).should.throw(/Unexpected character/);
         (function() { parser('.some-class+.some-other-class'); }).should.throw(/Unexpected character/);
+    });
+
+    it('should accept universal selector', function() {
+        var ruleSetList = parser('*');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(1);
+        ruleSetList[0][0].operator.should.equal('*');
+    });
+
+    it('should not throw errors when combining universal selector with other selectors', function() {
+        var ruleSetList = parser('*.class');
+
+        ruleSetList.length.should.equal(1);
+        ruleSetList[0].length.should.equal(2);
+    });
+
+    it('should throw an error when trying to combine universal selector with type selector', function() {
+        (function() { parser('*view'); }).should.throw(/Unexpected character/);
     });
 });

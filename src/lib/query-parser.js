@@ -150,8 +150,14 @@ var parser = (function () {
             } else if (character === '#') {
                 position = position + 1;
                 tokens.push(readId());
-            } else if (allowedCharactersForTagName.indexOf(character) >= 0) {
+            } else if (!tokens.length && allowedCharactersForTagName.indexOf(character) >= 0) {
                 tokens.push(readTagName());
+            } else if (!tokens.length && character === '*') {
+                tokens.push({
+                    property: 'tagname',
+                    operator: '*',
+                    value: null
+                });
             } else {
                 throw new Error('Unexpected character : "' + character + '"');
             }
