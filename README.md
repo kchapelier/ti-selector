@@ -1,3 +1,5 @@
+# ! Not maintained, the author does not use Titanium anymore. Fork away :clap:
+
 # ti-selector
 
 Simple selector for Titanium's native view elements.
